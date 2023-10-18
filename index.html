@@ -22,10 +22,14 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: space-between;
+            width: 300px;
+            height: 200px;
         }
         #text-display {
             font-size: 25px;
             color: white;
+            text-align: center;
         }
         @keyframes skew-x-shakeng{
             0% { transform: translate(0, 0) rotate(0deg); }
@@ -57,6 +61,15 @@
         button:active {
             transform: translateY(3px) translateX(3px);
             box-shadow: 0px 0px 0px 0px #2980b9;
+        }
+
+        .buttons {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            justify-self: flex-end;
+            width: 100%;
+            gap: 20px;
         }
 
         #contact {
@@ -271,10 +284,12 @@
 <body>
     <div id="content">
         <p id="text-display"></p>
-        <button id="go" onclick="changeText()"></button>
-        <button onclick="changeLanguage()">
-            <span id="lang"></span>
-        </button>
+        <div class="buttons">
+            <button id="go" onclick="changeText()"></button>
+            <button onclick="changeLanguage()">
+                <span id="lang"></span>
+            </button>
+        </div>
     </div>
     <a id="contact" href="mailto:wieditleest@trekteenbak.nl">contact</a>
     <div id="fireworks" class="hide">
@@ -297,6 +312,7 @@
             "Jij, double or nothing",
             "Jij, maar wel een liter",
             "Jij, maar wel een halve liter",
+            "Jij, ga er voor",
 
             // Buren
             "Trek een bak met de buurman, de verliezer doet er nog een",
@@ -318,7 +334,29 @@
             // Iedereen
             "Iedereen trekt een bak",
         ], "us": [
+            "You pull a bak, king!",
+            "You pull a bak, beerberfly!",
+            "You, double or nothing",
 
+            // Buren
+            "Pull a bak with your neighbors, the loser does another one",
+            "Do a waterfall with your neighbors",
+
+            // Alleen als
+
+            // Misc
+            "Pull your bak beerberfly",
+            "Not now, you pull it tomorrow morning",
+            "The youngest pulls a bak",
+            "The oldest pulls a bak",
+
+            // Niemand
+            "Nobody, everyone is a coward",
+            "Nobody, lucky bastard",
+            "Nobody, under 18 no alcohol",
+
+            // Iedereen
+            "Everyone pulls a bak",
         ]};
 
         const buttonText = {
@@ -339,6 +377,8 @@
         const minTime = 80;
         const maxTime = 600;
 
+        let timeoutHandle;
+
         function nextShow(i, max) {
             if(i <= 0) {
                 fireworksElement.classList.remove('hide');
@@ -353,7 +393,7 @@
 
             textElement.classList.add('shake');
             setTimeout(() => textElement.classList.remove('shake'), time > 110 ? time-10 : 100);
-            setTimeout(() => nextShow(i, max), time);
+            timeoutHandle = setTimeout(() => nextShow(i, max), time);
         }
 
         function changeLanguage() {
@@ -374,6 +414,8 @@
         function changeText() {
             fireworksElement.classList.add('hide');
             const amountShow = Math.floor(Math.random() * (maxShow-minShow)) + minShow;
+
+            if(timeoutHandle) clearTimeout(timeoutHandle);
 
             nextShow(amountShow, amountShow);
         }
